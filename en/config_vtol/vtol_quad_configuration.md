@@ -36,7 +36,7 @@ Follow the the respective tuning guides on how to tune multirotors and
 fixed wings.
 
 
-### Transition Tuning
+### Forward Transition Tuning
 
 While it might seem that you are dealing with a vehicle that can fly in
 two modes (multirotor for vertical takeoffs and landings and fixed wing
@@ -48,12 +48,43 @@ airspeed is too slow when it transitions it might stall.
 #### Transition Throttle
 
 Parameter: [VT_TRANS_THR](../advanced_config/parameter_reference.md#VT_TRANS_THR)
+Parameter: [VT_TRANS_THR](../advanced_config/parameter_reference.md#VT_TRANS_THR)
 
-Transition throttle defines the maximum throttle to use during the
-transition. Don’t set this too low otherwise you will never reach the
-transition airspeed. If you set it too high it will just use more power
-than you may want. For your first transition you are better off higher
+During transition, the throttle of the aircraft is ramped up from 0 to VT_TRANS_THR
+in XX seconds. Increasing VT_TRANS_THR will result in a faster transition, and 
+setting it too low could mean that the aircraft never reaches the transition airspeed
+(in which case the transition will time-out and the aircraft will keep on flying in 
+multicopter mode). Setting it too high will result in a velocity overshoot. 
+Generally it's best to set VT_TRANS_THR about 20% above trim throttle. 
+For your first transition you are better off higher
 than lower here.
+
+#### Blending Airspeed
+
+Parameter: [VT_ARSP_BLEND](../advanced_config/parameter_reference.md#VT_ARSP_BLEND)
+
+By default, as the airspeed gets close to the transition speed, multirotor
+attitude control will be reduced and fixed wing control will start
+increasing continuously until the transition occurs.
+
+Disable blending by setting this parameter to 0 which will keep full
+multirotor control and zero fixed wing control until the transition
+occurs.
+
+When flown without airspeed sensor (not advised!), this parameter has no effect.
+
+
+#### Transition Airspeed
+
+Parameter: [VT_ARSP_TRANS](../advanced_config/parameter_reference.md#VT_ARSP_TRANS)
+
+This is the airspeed which, when reached, will trigger the transition
+out of multirotor mode into fixed wing mode. It is critical that you
+have properly calibrated your airspeed sensor. It is also important that
+you pick an airspeed that is comfortably above your airframes stall
+speed (check FW\_AIRSPD\_MIN) as this is currently not checked.
+
+
 
 #### Forward Transition Duration
 
@@ -71,28 +102,7 @@ setting and will remain there until (hopefully) the transition speed is
 reached.
 
 
-#### Blending Airspeed
 
-Parameter: [VT_ARSP_BLEND](../advanced_config/parameter_reference.md#VT_ARSP_BLEND)
-
-By default, as the airspeed gets close to the transition speed, multirotor
-attitude control will be reduced and fixed wing control will start
-increasing continuously until the transition occurs.
-
-Disable blending by setting this parameter to 0 which will keep full
-multirotor control and zero fixed wing control until the transition
-occurs.
-
-
-#### Transition Airspeed
-
-Parameter: [VT_ARSP_TRANS](../advanced_config/parameter_reference.md#VT_ARSP_TRANS)
-
-This is the airspeed which, when reached, will trigger the transition
-out of multirotor mode into fixed wing mode. It is critical that you
-have properly calibrated your airspeed sensor. It is also important that
-you pick an airspeed that is comfortably above your airframes stall
-speed (check FW\_AIRSPD\_MIN) as this is currently not checked.
 
 
 #### Fixed Wing Permanent Stabilisation
